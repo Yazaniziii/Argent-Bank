@@ -1,5 +1,9 @@
+import AccountList from "../components/AccountList"
+
 export default function UserAccount() {
   return (
-    <div>UserAccount</div>
+    <main className="main bg-dark">
+      <AccountList />
+    </main>
   )
 }

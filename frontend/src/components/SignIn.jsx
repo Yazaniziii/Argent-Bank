@@ -3,7 +3,7 @@ import {faUserCircle} from "@fortawesome/free-solid-svg-icons"
 
 export default function SignIn() {
   return (
-    <div>
+    
         <section className="sign-in-content">
             <FontAwesomeIcon icon={faUserCircle}/>
             <h1>Sign In</h1>
@@ -24,6 +24,6 @@ export default function SignIn() {
                 <button className="sign-in-button">Sign In</button>
             </form>
         </section>
-    </div>
+    
   )
 }
