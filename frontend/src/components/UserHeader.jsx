@@ -1,4 +1,3 @@
-
 import { useSelector } from 'react-redux';
 
 export default function UserHeader() {
@@ -11,7 +10,9 @@ export default function UserHeader() {
         <br />
         {user.firstName}
       </h1>
-      <button className="edit-button">Edit Name</button>
+      <button className="edit-button">
+        Edit Name
+      </button>
     </div>
   );
 }

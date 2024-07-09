@@ -7,7 +7,8 @@ export const loginUser = createAsyncThunk('user/loginUser', async (userCredentia
 });
 
 export const fetchUserProfile = createAsyncThunk('user/fetchUserProfile', async () => {
-  const response = await axios.get('http://localhost:3001/api/v1/user/profile');
+  const response = await axios.post('http://localhost:3001/api/v1/user/profile');
+  console.log(response);
   return response.data.body;
 });
 
@@ -28,7 +29,7 @@ const userSlice = createSlice({
   initialState,
   reducers: {
     logoutUser(state) {
-      state.user = initialState.user;
+      state.user = initialState.user; // Réinitialise l'utilisateur à l'état initial après la déconnexion
     },
   },
   extraReducers(builder) {
