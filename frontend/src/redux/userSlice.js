@@ -26,6 +26,23 @@ export const loginUser = createAsyncThunk(
   }
 );
 
+export const fetchUserProfile = createAsyncThunk(
+  'user/fetchUserProfile',
+  async (_, { getState, rejectWithValue }) => {
+    try {
+      const state = getState();
+      const response = await api.post('/user/profile', null, {
+        headers: {
+          Authorization: `Bearer ${state.user.token}`,
+        },
+      });
+      return response.data.body;
+    } catch (err) {
+      return rejectWithValue(err.response.data);
+    }
+  }
+);
+
 const userSlice = createSlice({
   name: 'user',
   initialState,
@@ -48,6 +65,17 @@ const userSlice = createSlice({
         state.token = action.payload.token;
       })
       .addCase(loginUser.rejected, (state, action) => {
+        state.status = 'failed';
+        state.error = action.payload;
+      })
+      .addCase(fetchUserProfile.pending, (state) => {
+        state.status = 'loading';
+      })
+      .addCase(fetchUserProfile.fulfilled, (state, action) => {
+        state.status = 'succeeded';
+        state.user = { ...state.user, ...action.payload };
+      })
+      .addCase(fetchUserProfile.rejected, (state, action) => {
         state.status = 'failed';
         state.error = action.payload;
       });

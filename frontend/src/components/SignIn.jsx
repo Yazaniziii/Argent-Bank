@@ -3,9 +3,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserCircle } from "@fortawesome/free-solid-svg-icons";
 import { useDispatch, useSelector } from 'react-redux';
 import { loginUser } from '../redux/userSlice';
+import { useNavigate } from 'react-router-dom';
 
 export default function SignIn() {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const userStatus = useSelector((state) => state.user.status);
@@ -16,7 +18,7 @@ export default function SignIn() {
     const resultAction = await dispatch(loginUser({ email, password }));
 
     if (loginUser.fulfilled.match(resultAction)) {
-      history.push('/userAccount');
+      navigate('/User'); // Utilisez navigate pour rediriger
     }
   };
 
