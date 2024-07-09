@@ -1,87 +1,63 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import api from './api'; // Assurez-vous du chemin correct vers api.js
+import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import axios from 'axios';
+
+export const loginUser = createAsyncThunk('user/loginUser', async (userCredentials) => {
+  const response = await axios.post('http://localhost:3001/api/v1/user/login', userCredentials);
+  return response.data.body;
+});
+
+export const fetchUserProfile = createAsyncThunk('user/fetchUserProfile', async () => {
+  const response = await axios.get('http://localhost:3001/api/v1/user/profile');
+  return response.data.body;
+});
 
 const initialState = {
   user: {
     id: '',
     email: '',
-    userName: '',
     firstName: '',
     lastName: '',
+    token: '',
   },
-  token: null,
   status: 'idle',
   error: null,
 };
-
-export const loginUser = createAsyncThunk(
-  'user/loginUser',
-  async (credentials, { rejectWithValue }) => {
-    try {
-      const response = await api.post('/user/login', credentials);
-      return response.data;
-    } catch (err) {
-      return rejectWithValue(err.response.data);
-    }
-  }
-);
-
-export const fetchUserProfile = createAsyncThunk(
-  'user/fetchUserProfile',
-  async (_, { getState, rejectWithValue }) => {
-    try {
-      const state = getState();
-      const response = await api.post('/user/profile', null, {
-        headers: {
-          Authorization: `Bearer ${state.user.token}`,
-        },
-      });
-      return response.data.body;
-    } catch (err) {
-      return rejectWithValue(err.response.data);
-    }
-  }
-);
 
 const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    logout(state) {
+    logoutUser(state) {
       state.user = initialState.user;
-      state.token = null;
-      state.status = 'idle';
-      state.error = null;
     },
   },
-  extraReducers: (builder) => {
+  extraReducers(builder) {
     builder
       .addCase(loginUser.pending, (state) => {
         state.status = 'loading';
       })
       .addCase(loginUser.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.user = action.payload.user;
-        state.token = action.payload.token;
+        state.user = action.payload;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.payload;
+        state.error = action.error.message;
       })
       .addCase(fetchUserProfile.pending, (state) => {
         state.status = 'loading';
       })
       .addCase(fetchUserProfile.fulfilled, (state, action) => {
         state.status = 'succeeded';
-        state.user = { ...state.user, ...action.payload };
+        state.user = action.payload;
       })
       .addCase(fetchUserProfile.rejected, (state, action) => {
         state.status = 'failed';
-        state.error = action.payload;
+        state.error = action.error.message;
       });
   },
 });
 
-export const { logout } = userSlice.actions;
+export const { logoutUser } = userSlice.actions;
 
 export default userSlice.reducer;
