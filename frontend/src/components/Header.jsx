@@ -13,6 +13,8 @@ export default function Header() {
   const user = useSelector((state) => state.user.user);
   const isLoggedIn = !!user.token;
 
+  console.log(user);
+
   const handleSignOut = () => {
     dispatch(logoutUser());
     navigate('/signIn'); // Redirige vers la page SignIn après déconnexion
