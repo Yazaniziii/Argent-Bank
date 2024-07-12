@@ -19,6 +19,7 @@ if (initialState.user.token) {
 
 export const loginUser = createAsyncThunk('user/loginUser', async (userCredentials) => {
   const response = await axios.post('http://localhost:3001/api/v1/user/login', userCredentials);
+  console.log(response);
   return response.data.body;
 });
 

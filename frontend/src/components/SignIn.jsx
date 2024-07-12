@@ -11,7 +11,6 @@ export default function SignIn() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const userStatus = useSelector((state) => state.user.status);
-  const userError = useSelector((state) => state.user.error);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -52,7 +51,7 @@ export default function SignIn() {
         <button className="sign-in-button" type="submit">Sign In</button>
       </form>
       {userStatus === 'loading' && <p>Loading...</p>}
-      {userStatus === 'failed' && <p>{userError}</p>}
+      {userStatus === 'failed' && <p className='red'>Votre mot de passe ou votre nom d'utilisateur n'est pas correct</p>}
     </section>
   );
 }
