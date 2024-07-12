@@ -8,7 +8,7 @@ export default function UserHeader() {
       <h1>
         Welcome back
         <br />
-        {user.firstName}
+        {user.firstName} {user.lastName}
       </h1>
       <button className="edit-button">
         Edit Name

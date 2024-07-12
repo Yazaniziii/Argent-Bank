@@ -1,4 +1,3 @@
-
 import { Link } from 'react-router-dom';
 import argentBankLogo from '../assets/img/argentBankLogo.webp';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -9,35 +8,36 @@ import { useNavigate } from 'react-router-dom';
 
 export default function Header() {
   const dispatch = useDispatch();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const user = useSelector((state) => state.user.user);
   const isLoggedIn = !!user.token;
 
-  console.log(user);
-
-  const handleSignOut = () => {
+  const handleLogout = () => {
     dispatch(logoutUser());
-    navigate('/signIn'); // Redirige vers la page SignIn après déconnexion
+    navigate('/signIn');
   };
 
   return (
     <header>
       <nav className="main-nav">
         <Link className="main-nav-logo" to="/">
-          <img className="main-nav-logo-image" src={argentBankLogo} alt="logo Argent Bank" />
-          <h1 className="sr-only">Argent Bank</h1>
+          <img
+            className="main-nav-logo-image"
+            src={argentBankLogo}
+            alt="logo Argent Bank"
+          />
+          <h1 className="sr-only">
+            Argent Bank
+          </h1>
         </Link>
         <div>
           {isLoggedIn ? (
             <>
-              <Link to="/userAccount" className="main-nav-item">
-                <FontAwesomeIcon icon={faCircleUser} />
-                {user.firstName}
-              </Link>
-              <span onClick={handleSignOut} className="main-nav-item" style={{ cursor: 'pointer' }}>
+              <span className="main-nav-item">{user.firstName}</span>
+              <button onClick={handleLogout} className="main-nav-item">
                 <FontAwesomeIcon icon={faSignOutAlt} />
                 Sign Out
-              </span>
+              </button>
             </>
           ) : (
             <Link to="/signIn" className="main-nav-item">

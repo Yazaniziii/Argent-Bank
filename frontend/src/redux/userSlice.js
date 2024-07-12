@@ -1,47 +1,41 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
 
+export const loginUser = createAsyncThunk('user/loginUser', async (userCredentials) => {
+  const response = await axios.post('http://localhost:3001/api/v1/user/login', userCredentials);
+  const token = response.data.body.token;
+  localStorage.setItem('token', token);
+  return { ...response.data.body, token };
+});
+
+export const fetchUserProfile = createAsyncThunk('user/fetchUserProfile', async (token) => {
+  const response = await axios.post('http://localhost:3001/api/v1/user/profile', {}, {
+    headers: {
+      'Authorization': `Bearer ${token}`
+    }
+  });
+  return response.data.body;
+});
+
 const initialState = {
   user: {
     id: '',
     email: '',
     firstName: '',
     lastName: '',
-    token: localStorage.getItem('token') || '',
+    token: '',
   },
   status: 'idle',
   error: null,
 };
-
-if (initialState.user.token) {
-  axios.defaults.headers.common['Authorization'] = `Bearer ${initialState.user.token}`;
-}
-
-export const loginUser = createAsyncThunk('user/loginUser', async (userCredentials) => {
-  const response = await axios.post('http://localhost:3001/api/v1/user/login', userCredentials);
-  console.log(response);
-  return response.data.body;
-});
-
-export const fetchUserProfile = createAsyncThunk('user/fetchUserProfile', async () => {
-  const response = await axios.post('http://localhost:3001/api/v1/user/profile');
-  return response.data.body;
-});
 
 const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
     logoutUser(state) {
-      state.user = {
-        id: '',
-        email: '',
-        firstName: '',
-        lastName: '',
-        token: '',
-      };
+      state.user = initialState.user; // Réinitialise l'utilisateur à l'état initial après la déconnexion
       localStorage.removeItem('token');
-      delete axios.defaults.headers.common['Authorization'];
     },
   },
   extraReducers(builder) {
@@ -52,8 +46,6 @@ const userSlice = createSlice({
       .addCase(loginUser.fulfilled, (state, action) => {
         state.status = 'succeeded';
         state.user = action.payload;
-        localStorage.setItem('token', action.payload.token);
-        axios.defaults.headers.common['Authorization'] = `Bearer ${action.payload.token}`;
       })
       .addCase(loginUser.rejected, (state, action) => {
         state.status = 'failed';

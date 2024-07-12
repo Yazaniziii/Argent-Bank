@@ -51,7 +51,7 @@ export default function SignIn() {
         <button className="sign-in-button" type="submit">Sign In</button>
       </form>
       {userStatus === 'loading' && <p>Loading...</p>}
-      {userStatus === 'failed' && <p className='red'>Votre mot de passe ou votre nom d'utilisateur n'est pas correct</p>}
+      {userStatus === 'failed' && <p className='red'>Votre mot de passe ou votre nom d&apos;utilisateur n&apos;est pas correct</p>}
     </section>
   );
 }
